@@ -53,7 +53,7 @@ public:
 
     bool get_mark();
 
-    MemoryCell *set_mark();
+    MemoryCell *set_mark(bool val);
 
     pvoid get_belong_chunk();
 
@@ -68,7 +68,7 @@ public:
      */
     MemoryCell *inc_start(uint step);
 
-    MemoryCell *desc_stsasrt(uint step);
+    MemoryCell *desc_start(uint step);
 
     MemoryCell *inc_end(uint step);
 

@@ -120,4 +120,4 @@ public:
 
 public:
     void collect(size_t size);
-}
+};
