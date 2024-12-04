@@ -89,7 +89,7 @@ public:
 
     MemoryChunk *renew_cell_start();
 
-    MemoryChunk *set_availablle_table(list<MemoryCell *> &table);
+    MemoryChunk *set_available_table(list<MemoryCell *> &table);
 
     MemoryChunk *set_used_cell_num(uint val);
 
