@@ -151,6 +151,11 @@ uint MemoryChunk::get_old_cell_start() {
     return get_new_cell_start();
 }
 
+MemoryChunk *MemoryChunk::renew_cell_start() {
+    m_cell_start = get_new_cell_start();
+    return this;
+}
+
 MemoryChunk *MemoryChunk::set_available_table(list<MemoryCell *> &table) {
     m_available_table = table;
     return this;

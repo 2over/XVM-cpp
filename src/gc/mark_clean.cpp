@@ -26,7 +26,7 @@ MarkClean *MarkClean::set_mem_chunk(MemoryChunk *chunk) {
 void MarkClean::mark_step() {
     PRINT("\t 开始执行标记操作\n");
 
-    // 模拟可大兴分析算法标记对象，回收未打标记对象
+    // 模拟可达性分析算法标记对象，回收未打标记对象
     list<MemoryCell *> *used_table = get_mem_chunk()->get_used_table();
     list<MemoryCell *>::iterator iterator;
     for (iterator = used_table->begin(); iterator != used_table->end(); iterator++) {
