@@ -9,8 +9,14 @@
 #include "../utilities/HeapWord.h"
 #include "../oops/oopDesc.h"
 
-class CollectedHeap :public CHeapObj {
+class CollectedHeap : public CHeapObj {
+public:
+    static OopDesc *obj_allocate(size_t size);
 
+    static HeapWord *common_mem_allocate_init(size_t size);
+
+private:
+    static HeapWord *common_mem_allocate_noinit(size_t size);
 };
 
 

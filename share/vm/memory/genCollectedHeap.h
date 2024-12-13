@@ -6,8 +6,11 @@
 #define XVM_CPP_GENCOLLECTEDHEAP_H
 
 
-class genCollectedHeap {
+class GenCollectedHeap {
 
+
+public:
+    static GenCollectedHeap* heap();
 };
 
 

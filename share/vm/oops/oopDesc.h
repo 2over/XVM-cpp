@@ -6,7 +6,7 @@
 #define XVM_CPP_OOPDESC_H
 
 
-class oopDesc {
+class OopDesc {
 
 };
 
