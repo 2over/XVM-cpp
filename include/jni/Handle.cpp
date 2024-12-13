@@ -3,9 +3,10 @@
 //
 
 #include "Handle.h"
+
 static jobject dataToHandle(JNIEnv *env, jlong data, int data_type) {
     // 找到Handle类
-    const char* handle_class_name = "com/cover/jvm/jdk/classes/Handle";
+    const char *handle_class_name = "com/cover/jvm/jdk/classes/Handle";
 
     jclass c = env->FindClass(handle_class_name);
 
@@ -51,6 +52,7 @@ static jobject dataToHandle(JNIEnv *env, jlong data, int data_type) {
     return obj;
 
 }
+
 template<typename T>
 static T handleToData(JNIEnv *env, jobject handle) {
     jclass c = env->GetObjectClass(handle);
@@ -63,4 +65,24 @@ static T handleToData(JNIEnv *env, jobject handle) {
     }
 
     jlong p_val = env->GetLongField(handle, p);
+    return (T) p_val;
+}
+
+jobject Handle::klassToHandle(JNIEnv *env, Klass *klass) {
+    jlong data = reinterpret_cast<jlong>(klass);
+
+    return dataToHandle(env, data, HANDLE_TYPE_KLASS);
+}
+
+jobject Handle::methodToHandle(JNIEnv *env, MethodInfo *method) {
+    jlong data = reinterpret_cast<jlong>(method);
+    return dataToHandle(env, data, HANDLE_TYPE_METHOD);
+}
+
+Klass *Handle::klass(JNIEnv *env, jobject klass_handle) {
+    return handleToData<Klass *>(env, klass_handle);
+}
+
+MethodInfo *Handle::method(JNIEnv *env, jobject method_handle) {
+    return handleToData<MethodInfo *>(env, method_handle);
 }
