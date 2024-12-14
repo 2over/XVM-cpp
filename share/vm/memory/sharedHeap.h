@@ -5,8 +5,9 @@
 #ifndef XVM_CPP_SHAREDHEAP_H
 #define XVM_CPP_SHAREDHEAP_H
 
+#include "../gc_interface/CollectedHeap.h"
 
-class sharedHeap {
+class SharedHeap :public CollectedHeap{
 
 };
 

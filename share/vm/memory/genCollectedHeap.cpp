@@ -3,3 +3,6 @@
 //
 
 #include "genCollectedHeap.h"
+#include "DefNewGeneration.h"
+#include "../../../include/gc/gc_factory.h"
+
