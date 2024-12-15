@@ -11,6 +11,8 @@
 class DefNewGeneration :public Generation {
 public:
     HeapWord* par_allocate(size_t size);
+
+    // this is a test commit
 };
 
 
