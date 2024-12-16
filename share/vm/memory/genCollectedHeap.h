@@ -24,7 +24,7 @@ private:
 public:
     GenCollectedHeap(GenCollectorPolicy *policy);
 
-    void intialize();
+    void initialize();
 
     void post_initialize();
 
