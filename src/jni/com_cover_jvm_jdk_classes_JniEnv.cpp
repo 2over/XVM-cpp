@@ -3,7 +3,9 @@
 //
 #include "../../include/jni/com_cover_jvm_jdk_classes_JniEnv.h"
 #include "../../include/common.h"
-#include "../"
+#include "../../include/jni/Handle.h"
+#include "../../include/jni/JniTools.h"
+#include "../../share/vm/oops/"
 
 
 /*

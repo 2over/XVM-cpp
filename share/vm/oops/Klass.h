@@ -4,9 +4,10 @@
 
 #ifndef XVM_CPP_KLASS_H
 #define XVM_CPP_KLASS_H
+#include "Metadata.h"
 
 
-class Klass {
+class Klass : public Metadata{
 
 };
 

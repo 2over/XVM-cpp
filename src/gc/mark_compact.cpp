@@ -236,6 +236,6 @@ void MarkCompact::run() {
 
     data_compact_step();
 
-    PRINT("[标记-整理算法]")
+    PRINT("[标记-整理算法]");
 }
 
