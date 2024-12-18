@@ -8,6 +8,7 @@
 #include "../../../include/common.h"
 #include "../utilities/AccessFlags.h"
 #include "ConstantPool.h"
+#include "FieldInfo.h"
 
 
 class InstanceKlass : public Klass {
