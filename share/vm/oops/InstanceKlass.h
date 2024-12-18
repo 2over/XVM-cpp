@@ -9,7 +9,7 @@
 #include "../utilities/AccessFlags.h"
 
 
-class InstanceKlass : public Klass{
+class InstanceKlass : public Klass {
 
 };
 
