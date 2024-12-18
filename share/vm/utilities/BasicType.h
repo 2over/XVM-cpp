@@ -205,6 +205,156 @@ enum Bytecode {
     _fadd                   = 98, // 0x62
     _dadd                   = 99, // 0x63
     _isub                   = 100, // 0x64
+    _lsub                   = 101, // 0x65
+    _fsub                   = 102, // 0x66
+    _dsub                   = 103, // 0x67
+    _imul                   = 104, // 0x68
+    _lmul                   = 105, // 0x69
+    _fmul                   = 106, // 0x6a
+    _dmul                   = 107, // 0x6b
+    _idiv                   = 108, // 0x6c
+    _ldiv                   = 109, // 0x6d
+    _fdiv                   = 110, // 0x6e
+    _ddiv                   = 111, // 0x6f
+    _irem                   = 112, // 0x70
+    _lrem                   = 113, // 0x71
+    _frem                   = 114, // 0x72
+    _drem                   = 115, // 0x73
+    _ineg                   = 116, // 0x74
+    _lneg                   = 117, // 0x75
+    _fneg                   = 118, // 0x76
+    _dneg                   = 119, // 0x77
+    _ishl                   = 120, // 0x78
+    _lshl                   = 121, // 0x79
+    _ishr                   = 122, // 0x7a
+    _lshr                   = 123, // 0x7b
+    _iushr                  = 124, // 0x7c
+    _lushr                  = 125, // 0x7d
+    _iand                   = 126, // 0x7e
+    _land                   = 127, // 0x7f
+    _ior                    = 128, // 0x80
+    _lor                    = 129, // 0x81
+    _ixor                   = 130, // 0x82
+    _lxor                   = 131, // 0x83
+    _iinc                   = 132, // 0x84
+    _i2l                    = 133, // 0x85
+    _i2f                    = 134, // 0x86
+    _i2d                    = 135, // 0x87
+    _l2i                    = 136, // 0x88
+    _l2f                    = 137, // 0x89
+    _l2d                    = 138, // 0x8a
+    _f2i                    = 139, // 0x8b
+    _f2l                    = 140, // 0x8c
+    _f2d                    = 141, // 0x8d
+    _d2i                    = 142, // 0x8e
+    _d2l                    = 143, // 0x8f
+    _d2f                    = 144, // 0x90
+    _i2b                    = 145, // 0x91
+    _i2c                    = 146, // 0x92
+    _i2s                    = 147, // 0x93
+    _lcmp                   = 148, // 0x94
+    _fcmpl                  = 149, // 0x95
+    _fcmpg                  = 150, // 0x96
+    _dcmpl                  = 151, // 0x97
+    _dcmpg                  = 152, // 0x98
+    _ifeq                   = 153, // 0x99
+    _ifne                   = 154, // 0x9a
+    _iflt                   = 155, // 0x9b
+    _ifge                   = 156, // 0x9c
+    _ifgt                   = 157, // 0x9d
+    _ifle                   = 158, // 0x9e
+    _if_icmpeq              = 159, // 0x9f
+    _if_icmpne              = 160, // 0xa0
+    _if_icmplt              = 161, // 0xa1
+    _if_icmpge              = 162, // 0xa2
+    _if_icmpgt              = 163, // 0xa3
+    _if_icmple              = 164, // 0xa4
+    _if_acmpeq              = 165, // 0xa5
+    _if_acmpne              = 166, // 0xa6
+    _goto                   = 167, // 0xa7
+    _jsr                    = 168, // 0xa8
+    _ret                    = 169, // 0xa9
+    _tableswitch            = 170, // 0xaa
+    _lookupswitch           = 171, // 0xab
+    _ireturn                = 172, // 0xac
+    _lreturn                = 173, // 0xad
+    _freturn                = 174, // 0xae
+    _dreturn                = 175, // 0xaf
+    _areturn                = 176, // 0xb0
+    _return                 = 177, // 0xb1
+    _getstatic              = 178, // 0xb2
+    _putstatic              = 179, // 0xb3
+    _getfield               = 180, // 0xb4
+    _putfield               = 181, // 0xb5
+    _invokevirtual          = 182, // 0xb6
+    _invokespecial          = 183, // 0xb7
+    _invokestatic           = 184, // 0xb8
+    _invokeinterface        = 185, // 0xb9
+    _invokedynamic          = 186, // 0xba
+    _new                    = 187, // 0xbb
+    _newarray               = 188, // 0xbc
+    _anewarray              = 189, // 0xbd
+    _arraylength            = 190, // 0xbe
+    _athrow                 = 191, // 0xbf
+    _checkcast              = 192, // 0xc0
+    _instanceof             = 193, // 0xc1
+    _monitorenter           = 194, // 0xc2
+    _monitorexit            = 195, // 0xc3
+    _wide                   = 196, // 0xc4
+    _multianewarray         = 197, // 0xc5
+    _ifnull                 = 198, // 0xc6
+    _ifnonnull              = 199, // 0xc7
+    _goto_w                 = 200, // 0xc8
+    _jsr_w                  = 201, // 0xc9
+    _breakpoint             = 202, // 0xca
+
+
+
+    number_of_java_codes,
+
+    // JVM bytecodes
+    _fast_agetfield         = number_of_java_codes,
+    _fast_bgetfield         ,
+    _fast_cgetfield         ,
+    _fast_dgetfield         ,
+    _fast_fgetfield         ,
+    _fast_igetfield         ,
+    _fast_lgetfield         ,
+    _fast_sgetfield         ,
+
+    _fast_aputfield         ,
+    _fast_bputfield         ,
+    _fast_cputfield         ,
+    _fast_dputfield         ,
+    _fast_fputfield         ,
+    _fast_iputfield         ,
+    _fast_lputfield         ,
+    _fast_sputfield         ,
+
+    _fast_aload_0           ,
+    _fast_iaccess_0         ,
+    _fast_aaccess_0         ,
+    _fast_faccess_0         ,
+
+    _fast_iload             ,
+    _fast_iload2            ,
+    _fast_icaload           ,
+
+    _fast_invokevfinal      ,
+    _fast_linearswitch      ,
+    _fast_binaryswitch      ,
+
+    // special handling of oop constants:
+    _fast_aldc              ,
+    _fast_aldc_w            ,
+
+    _return_register_finalizer,
+
+    // special handling of signature-polymorphic methods:
+
+    _invokehandle           ,
+    _shouldnotreachhere     , // Fordebugging
+    number_of_codes
 
 };
 
