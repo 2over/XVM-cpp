@@ -75,5 +75,17 @@ typedef enum {
 }while(0)
 
 #define ERROR_PRINT(info, ...) do{ if(DEBUG_LEVEL>=ERROR_OUTPUT){ printf("[Error] (%s:%d->%s):" info"", __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); } }while(0)
+#define assert(cond, msg) { if (!(cond))  {fprintf(stderr, "assert fail %s %d: %s\n", __FILE__, __LINE__, msg); abort(); }}
+
+#define WRITE(str) do {\
+    write(STDOUT_FILENO, str, strlen(str)); \
+} while(0)
+
+#define ASSERT_ZERO(status, str) do {\
+    if (0 != status) {\
+        WRITE(str); \
+        exit(-1); \
+    } \
+} while(0)
 
 

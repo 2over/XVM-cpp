@@ -31,6 +31,10 @@ public:
     void set_run_oop(jobject oop) {
         _run_oop = oop;
     }
+
+    jobject get_run_oop() {
+        return _run_oop;
+    }
 public:
     void run();
 };
