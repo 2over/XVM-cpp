@@ -93,7 +93,7 @@ public:
     }
 
 public:
-    bool should_be_intialized() const {
+    bool should_be_initialized() const {
         return !is_initialized();
     }
 
@@ -101,7 +101,7 @@ public:
         return _init_state == fully_initialized;
     }
 
-    void initalize();
+    void initialize();
 
     void initialize_impl();
 
@@ -154,10 +154,55 @@ public:
         _super_klass = klass;
     }
 
-    void set_interface_count(short v) {
+    void set_interfaces_count(short v) {
         _interfaces_count = v;
     }
 
+    void set_fields_count(short v) {
+        _fields_count = v;
+    }
+
+    void set_methods_count(short v) {
+        _methods_count = v;
+    }
+
+    void add_method(MethodInfo* method) {
+        _methods.push_back(method);
+    }
+
+    void set_attributes_count(short v) {
+        _attributes_count = v;
+    }
+
+    void set_inner_classes(InnerClasses* classes) {
+        _inner_classes = classes;
+    }
+
+    int get_interfaces_count();
+
+    int super_class() {
+        return _super_class;
+    }
+
+    Klass* super_klass() {
+        return _super_klass;
+    }
+
+    void set_init_state(ClassState state) {
+        _init_state = state;
+    }
+
+    void set_name(string name) {
+        _name = name;
+    }
+
+    void initialize_super_vtable(InstanceKlass* klass);
+    void initialize_vtable(InstanceKlass* klass);
+
+public:
+    void print_methods();
+
+    void print_vtable();
 
 };
 

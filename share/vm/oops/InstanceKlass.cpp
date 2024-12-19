@@ -3,3 +3,4 @@
 //
 
 #include "InstanceKlass.h"
+#include "../prims/JavaNativeInterface.h"
