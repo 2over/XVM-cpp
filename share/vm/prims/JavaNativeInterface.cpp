@@ -3,6 +3,9 @@
 //
 
 #include "JavaNativeInterface.h"
+#include "../runtime/JavaThread.h"
+#include "../runtime/Threads.h"
+
 MethodInfo* JavaNativeInterface::getMethodID(InstanceKlass *klass, string method_name, string descriptor_name) {
     vector<MethodInfo *> methods = klass->methods();
     MethodInfo* ret = NULL;
@@ -34,5 +37,6 @@ MethodInfo * JavaNativeInterface::getVMethodID(InstanceKlass *klass, string meth
 }
 
 void JavaNativeInterface::callStaticVoidMethod(InstanceKlass *klass, MethodInfo *method, ...) {
-    JavaThread* tjread = Threads::current_
+    JavaThread* tjread = Threads::current_thread();
+    CodeAttribute* attribute = static_case<CodeAttribute *>(method->attribute())
 }
