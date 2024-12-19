@@ -9,12 +9,12 @@
 #include "../../../include/common.h"
 #include "../gc_interface/CollectedHeap.h"
 
-class Universe : public AllStatic{
+class Universe : public AllStatic {
 private:
-    static CollectedHeap* _collectedHeap;
+    static CollectedHeap *_collectedHeap;
 
 public:
-    static CollectedHeap* heap() {
+    static CollectedHeap *heap() {
         return _collectedHeap;
     }
 
