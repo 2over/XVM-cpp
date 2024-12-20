@@ -11,7 +11,7 @@
 #include <map>
 
 typedef class oopDesc *oop;
-typedef class InstanceOopDEsc *instanceOop;
+typedef class InstanceOopDesc *instanceOop;
 
 
 class InstanceOopDesc : public OopDesc {
