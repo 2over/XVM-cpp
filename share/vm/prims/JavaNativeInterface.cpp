@@ -5,6 +5,7 @@
 #include "JavaNativeInterface.h"
 #include "../runtime/JavaThread.h"
 #include "../runtime/Threads.h"
+#include "../oops/CodeAttribute.h"
 
 MethodInfo* JavaNativeInterface::getMethodID(InstanceKlass *klass, string method_name, string descriptor_name) {
     vector<MethodInfo *> methods = klass->methods();
@@ -37,6 +38,25 @@ MethodInfo * JavaNativeInterface::getVMethodID(InstanceKlass *klass, string meth
 }
 
 void JavaNativeInterface::callStaticVoidMethod(InstanceKlass *klass, MethodInfo *method, ...) {
-    JavaThread* tjread = Threads::current_thread();
-    CodeAttribute* attribute = static_case<CodeAttribute *>(method->attribute())
+    JavaThread* thread = Threads::current_thread();
+    CodeAttribute* attribute = static_cast<CodeAttribute *>(method->attribute());
+
+    // 取得上个方法的栈桢
+    VirtualFrame* frame = thread->frames().top();
+
+    // 取得this指针
+    StackValue* value = frame->operand_stack().top();
+
+    // 创建运行 该方法的栈桢
+    VirtualFrame* current_frame = new VirtualFrame(attribute->max_locals());
+
+    thread->frames().push(current_frame);
+
+    INFO_PRINT("栈桢数量: %d\n", thread->frames().size());
+
+    // 给this指针赋值
+    current_frame->local_variable_table()[0] = value;
+
+    BytecodeInterpreter::run()
+
 }
