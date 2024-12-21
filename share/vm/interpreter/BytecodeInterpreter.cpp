@@ -7,6 +7,7 @@
 #include "../oops/CodeAttribute.h"
 #include "jni.h"
 #include "../../../include/jni/JniTools.h"
+#include "../prims/JavaNativeInterface.h"
 
 
 extern JNIEnv* g_env;
@@ -175,8 +176,68 @@ void BytecodeInterpreter::run(JavaThread *thread, MethodInfo *method) {
                 string descriptor_name = klass->constant_pool()->get_method_descriptor_from_methodref(methodref_index);
 
                 INFO_PRINT("%s, %s, %s\n", class_name.c_str(), method_name.c_str(), descriptor_name.c_str());
+                if (0 == class_name.find("java")) {
+                    jmethodID method = JniTools::getMethod(class_name.c_str(),
+                            method_name.c_str(), descriptor_name.c_str());
 
+                    // 取出第一个参数 hello
+                    StackValue* value1 = frame->operand_stack().top();
+                    frame->operand_stack().pop();
+
+                    // 取出第二个参数 this
+                    StackValue* value2 = frame->operand_stack().top();
+                    frame->operand_stack().pop();
+
+                    jobject out_object = reinterpret_cast<jobject>(value2->data());
+
+                    if ("(I)V" == descriptor_name) {
+                        ERROR_PRINT("%d\n", value1->data());
+
+                        g_env->CallVoidMethod(out_object, method, value1->data());
+                    } else {
+                        string* s = reinterpret_cast<string *>(value1->data());
+                        g_env->CallVoidMethod(out_object, method, JniTools::stringToJavaString(*s));
+                    }
+                } else {
+                    klass->link_class();
+
+                    MethodInfo* methodInfo = JavaNativeInterface::getVMethodID(klass, method_name, descriptor_name);
+                    if (NULL == methodInfo) {
+                        ERROR_PRINT("%s 中没有找到方法%s, %s\n", class_name.c_str(), method_name.c_str(), descriptor_name.c_str());
+                        exit(-1);
+                    }
+
+                    ERROR_PRINT("%s vtable 中找到了分那个法%s, %s\n", class_name.c_str(), method_name.c_str(), descriptor_name.c_str());
+
+                    // 字节码指针重置, 不然重复调用会出现问题
+                    CodeAttribute* code_attribute = static_cast<CodeAttribute *>(methodInfo->attribute());
+                    code_attribute->codes()->reset();
+
+                    // 调用
+                    JavaNativeInterface::callVoidMethod(klass, methodInfo);
+                }
+
+                break;
             }
+            case _invokespecial: {
+                INFO_PRINT("执行指令: _invokespecial\n");
+
+                int operand = code_stream->get_u2();
+                int index = klass->constant_pool()->get_item_int(operand);
+                string class_name = klass->constant_pool()->get_class_name_from_methodref(index);
+                string method_name = klass->constant_pool()->get_method_name_from_methodref(index);
+                string descriptor_name = klass->constant_pool()->get_method_descriptor_from_methodref(index);
+
+                if ("java/lang/Object" == class_name) {
+                    INFO_PRINT(" 不执行 [ java/lang/Object] 的构造方法\n");
+                    break;
+                }
+
+                INFO_PRINT("%s, %s, %s\n", class_name.c_str(), method_name.c_str(), descriptor_name.c_str());
+
+                long klass = SystemDictionary::
+            }
+
         }
     }
 }
