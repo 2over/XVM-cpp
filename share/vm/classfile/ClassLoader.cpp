@@ -4,6 +4,7 @@
 
 #include "ClassLoader.h"
 #include "ClassPathDirEntry.h"
+#include "ClassFileParser.h"
 
 Klass* ClassLoader::load_classfile(string class_name) {
     Klass* klass = NULL;

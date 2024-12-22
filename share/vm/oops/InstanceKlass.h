@@ -126,6 +126,10 @@ public:
         _major_version = v;
     }
 
+    void set_major_version(short v) {
+        _major_version = v;
+    }
+
     void set_constant_pool_count(short v) {
         _constant_pool_count = v;
     }
@@ -160,6 +164,9 @@ public:
 
     void set_fields_count(short v) {
         _fields_count = v;
+    }
+    void add_fields(FieldInfo* field) {
+        _fields.push_back(field);
     }
 
     void set_methods_count(short v) {
