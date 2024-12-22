@@ -3,8 +3,27 @@
 //
 
 #include "ClassLoader.h"
+#include "ClassPathDirEntry.h"
 
 Klass* ClassLoader::load_classfile(string class_name) {
     Klass* klass = NULL;
-    ClassPathDirEntry* stream = e->open_stream(class_name);
+    ClassPathDirEntry* e = new ClassPathDirEntry;
+    ClassFileStream* stream = e->open_stream(class_name);
+
+    if (NULL != stream) {
+        ClassFileParser parser(stream);
+
+        klass = parser.parseClassFile();
+    }
+
+    return klass;
+
+}
+
+ClassLoaderData *ClassLoader::loader_data() {
+    return _loader_data;
+}
+
+ClassLoaderData **ClassLoader::loader_data_addr() {
+    return &_loader_data;
 }
