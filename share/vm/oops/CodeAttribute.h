@@ -15,8 +15,8 @@
 struct ExceptionTableItem {
     short start_pc;
     short end_pc;
-    short handler_gc;
-    short catch_types;
+    short handler_pc;
+    short catch_type;
 };
 
 
@@ -115,7 +115,7 @@ public:
         _name = name;
     }
 
-    void set_stsack_map_table(StackMapTable* table) {
+    void set_stack_map_table(StackMapTable* table) {
         _stack_map_table = table;
     }
 

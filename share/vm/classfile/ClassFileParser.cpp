@@ -187,7 +187,7 @@ void ClassFileParser::parseFields(InstanceKlass *klass) {
 }
 
 
-void ClassFileParser::parseMethods(InstanceKlass* klass) {
+void ClassFileParser::parseMethods(InstanceKlass *klass) {
     // 方法个数
     short count = stream()->get_u2();
     klass->set_methods_count(count);
@@ -267,9 +267,9 @@ void ClassFileParser::parseMethods(InstanceKlass* klass) {
 }
 
 void ClassFileParser::parseCodeAttribute(MethodInfo *method) {
-    InstanceKlass* klass = static_cast<InstanceKlass* >(method->klass());
+    InstanceKlass *klass = static_cast<InstanceKlass * >(method->klass());
 
-    CodeAttribute* attribute = new CodeAttribute(method);
+    CodeAttribute *attribute = new CodeAttribute(method);
     method->set_code_attribute(attribute);
 
     // name index
@@ -296,7 +296,7 @@ void ClassFileParser::parseCodeAttribute(MethodInfo *method) {
     attribute->set_code_length(code_length);
 
     // code
-    CodeStream* code_stream = new CodeStream(code_length);
+    CodeStream *code_stream = new CodeStream(code_length);
     attribute->set_codes(code_stream);
 
     stream()->copy(code_stream->codes(), code_length);
@@ -385,6 +385,161 @@ void ClassFileParser::parseLocalVariableTable(MethodInfo *method) {
     }
 }
 
-void ClassFileParser::parseLineNumberTable(MethodInfo* method) {
+void ClassFileParser::parseLineNumberTable(MethodInfo *method) {
+    InstanceKlass *klass = static_cast<InstanceKlass *>(method->klass());
+    CodeAttribute *attribute = static_cast<CodeAttribute *>(method->attribute());
 
+    // name index
+    short name_index = stream()->get_u2();
+
+    string name = klass->constant_pool()->get_item_string(name_index);
+
+    INFO_PRINT("\t\t 开始解析方法属性: %s\n", name.c_str());
+
+    // length
+    int length = stream()->get_u4();
+
+    // table length
+    short table_length = stream()->get_u2();
+
+    LineNumberTable *table = new LineNumberTable(length);
+    attribute->set_line_number_table(table);
+
+    table->set_name_index(name_index);
+    table->set_name(name);
+    table->set_table_length(table_length);
+
+    // table item
+    for (int i = 0; i < table_length; ++i) {
+        // start pc
+        short start_pc = stream()->get_u2();
+        table->table()[i].start_pc = start_pc;
+
+        // line number
+        short line_number = stream()->get_u2();
+        table->table()[i].line_number = line_number;
+
+        INFO_PRINT("\t\t\t start pc: %d, line number: %d\n", start_pc, line_number);
+    }
+}
+
+void ClassFileParser::parseClassAttribute(InstanceKlass *klass) {
+    SourceFile *source_file = new SourceFile;
+    klass->set_source_file(source_file);
+
+    // name index
+    source_file->set_name_index(stream()->get_u2());
+
+    // length
+    source_file->set_length(stream()->get_u4());
+
+    // file_index
+    source_file->set_sourcefile_index(stream()->get_u2());
+}
+
+void ClassFileParser::parseExceptionTable(MethodInfo *method) {
+    CodeAttribute *attribute = static_cast<CodeAttribute *>(method->attribute());
+
+    for (int i = 0; i < attribute->get_exception_table_length(); ++i) {
+        // start pc
+        short start_pc = stream()->get_u2();
+        attribute->exception_table()[i].start_pc = start_pc;
+
+        // end pc
+        short end_pc = stream()->get_u2();
+        attribute->exception_table()[i].end_pc = end_pc;
+
+        // handler pc
+        short handler_pc = stream()->get_u2();
+        attribute->exception_table()[i].handler_pc = handler_pc;
+
+        // catch type
+        short catch_type = stream()->get_u2();
+        attribute->exception_table()[i].catch_type = catch_type;
+    }
+}
+
+void ClassFileParser::parseStackMapTable(MethodInfo *method) {
+    CodeAttribute *attribute = static_cast<CodeAttribute *>(method->attribute());
+
+    StackMapTable *table = new StackMapTable;
+    attribute->set_stack_map_table(table);
+
+    // attr name index
+    table->set_attr_name_index(stream()->get_u2());
+
+    // attr len
+    int len = stream()->get_u4();
+    table->set_attr_length(len);
+
+    // 后面的不解析, 跳过
+    stream()->inc(len);
+}
+
+void ClassFileParser::parseExceptions(MethodInfo *method) {
+    Exceptions *exceptions = new Exceptions;
+    method->set_exceptions(exceptions);
+
+    // name index
+    exceptions->set_name_index(stream()->get_u2());
+
+    // length
+    int len = stream()->get_u4();
+    exceptions->set_length(len);
+
+    stream()->inc(len);
+}
+
+
+void ClassFileParser::parseSignature(MethodInfo *method) {
+    Signature *signature = new Signature;
+    method->set_signature(signature);
+
+    // name index
+    signature->set_name_index(stream()->get_u2());
+
+    // len
+    signature->set_length(stream()->get_u4());
+
+    // signature index
+    signature->set_signature_index(stream()->get_u2());
+}
+
+void ClassFileParser::parseDeprecated(MethodInfo *method) {
+    Deprecated *deprecated = new Deprecated;
+    method->set_deprecated(deprecated);
+
+    // name index
+    deprecated->set_name_index(stream()->get_u2());
+
+    // len
+    deprecated->set_length(stream()->get_u4());
+}
+
+void ClassFileParser::parseRuntimeVisibleAnnotations(MethodInfo *method) {
+    RuntimeVisibleAnnotations *annotations = new RuntimeVisibleAnnotations;
+    method->set_runtime_visible_annotations(annotations);
+
+    // name index
+    annotations->set_name_index(stream()->get_u2());
+
+    // len
+    int len = stream()->get_u4();
+    annotations->set_length(len);
+
+    stream()->inc(len);
+}
+
+void ClassFileParser::parseInnerClasses(InstanceKlass *klass) {
+    InnerClasses *classes = new InnerClasses;
+    klass->set_inner_classes(classes);
+
+    // name index
+    classes->set_name_index(stream()->get_u2());
+
+    // len
+    int len = stream()->get_u4();
+    classes->set_length(len);
+
+    stream()->inc(len);
 }

@@ -181,6 +181,10 @@ public:
         _attributes_count = v;
     }
 
+    void set_source_file(SourceFile* p) {
+        _source_file = p
+    }
+
     void set_inner_classes(InnerClasses* classes) {
         _inner_classes = classes;
     }
