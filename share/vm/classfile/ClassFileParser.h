@@ -32,7 +32,7 @@ public:
 
     void parseLocalVariableTable(MethodInfo *method);
 
-    void parseLineNumbertable(MethodInfo *method);
+    void parseLineNumberTable(MethodInfo *method);
 
     void parseClassAttribute(InstanceKlass *klass);
 

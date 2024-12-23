@@ -3,6 +3,7 @@
 //
 
 #include "ClassFileParser.h"
+#include "../oops/CodeAttribute.h"
 
 ClassFileParser::ClassFileParser(ClassFileStream *stream) {
     _stream = stream;
@@ -183,4 +184,207 @@ void ClassFileParser::parseFields(InstanceKlass *klass) {
             exit(-1);
         }
     }
+}
+
+
+void ClassFileParser::parseMethods(InstanceKlass* klass) {
+    // 方法个数
+    short count = stream()->get_u2();
+    klass->set_methods_count(count);
+
+    INFO_PRINT("开始解析方法信息, 数量: %d\n", count);
+
+    // 解析方法
+    for (int i = 0; i < count; ++i) {
+        MethodInfo *method = new MethodInfo(klass);
+        klass->add_method(method);
+
+        method->set_belong_klass(klass);
+        method->set_class_name(klass->name());
+
+        // access flags
+        short access_flags = stream()->get_u2();
+        method->set_flags(access_flags);
+
+        // name index
+        short name_index = stream()->get_u2();
+        method->set_name_index(name_index);
+
+        // name
+        string name = klass->constant_pool()->get_item_string(name_index);
+        method->set_name(name);
+
+        // descriptor index
+        short descriptor_index = stream()->get_u2();
+        method->set_descriptor_index(descriptor_index);
+
+        /**
+         * descriptor
+         * 查找方法时要用
+         * Hotspot是解析阶段完成的
+         */
+        method->set_descriptor(klass->constant_pool()->get_item_string(descriptor_index));
+
+        // attribute count
+        short attributes_count = stream()->get_u2();
+        method->set_attributes_count(attributes_count);
+
+        // 如果是native、 abstract方法，停止解析
+        if (access_flags & ACC_NATIVE) {
+            ERROR_PRINT("\t 这是一个native方法\n");
+            continue;
+        }
+
+        // 解析 attributes
+        for (int j = 0; j < attributes_count; ++j) {
+            short attr_name_index = stream()->get_u2_fast();
+            string attr_name = klass->constant_pool()->get_item_string(attr_name_index);
+
+            if ("Code" == attr_name) {
+                INFO_PRINT("解析方法属性: %s\n", name.c_str());
+
+                parseCodeAttribute(method);
+            } else if ("Exceptions" == attr_name) {
+                INFO_PRINT("解析方法属性: Exceptions\n");
+
+                parseSignature(method);
+            } else if ("Deprecated" == attr_name) {
+                INFO_PRINT("解析方法属性: Deprecated\n");
+
+                parseDeprecated(method);
+            } else if ("RuntimeVisibleAnnotations" == attr_name) {
+                INFO_PRINT("解析方法属性: RuntimeVisibleAnnotations\n");
+
+                parseRuntimeVisibleAnnotations(method);
+            } else {
+                ERROR_PRINT("未支持的方法属性: %s\n", attr_name.c_str());
+                exit(-1);
+            }
+
+
+        }
+    }
+}
+
+void ClassFileParser::parseCodeAttribute(MethodInfo *method) {
+    InstanceKlass* klass = static_cast<InstanceKlass* >(method->klass());
+
+    CodeAttribute* attribute = new CodeAttribute(method);
+    method->set_code_attribute(attribute);
+
+    // name index
+    short name_index = stream()->get_u2();
+    attribute->set_name_index(name_index);
+
+    string name = klass->constant_pool()->get_item_string(name_index);
+    attribute->set_name(name);
+
+    // length
+    int length = stream()->get_u4();
+    attribute->set_length(length);
+
+    // stack
+    short stack = stream()->get_u2();
+    attribute->set_max_stack(stack);
+
+    // locals
+    short locals = stream()->get_u2();
+    attribute->set_max_locals(locals);
+
+    // code length
+    int code_length = stream()->get_u4();
+    attribute->set_code_length(code_length);
+
+    // code
+    CodeStream* code_stream = new CodeStream(code_length);
+    attribute->set_codes(code_stream);
+
+    stream()->copy(code_stream->codes(), code_length);
+
+    // exceptions table length
+    short exception_table_len = stream()->get_u2();
+    attribute->set_exception_table_length(exception_table_len);
+
+    if (0 != exception_table_len) {
+        attribute->create_exception_table();
+
+        INFO_PRINT("\t\t 开始解析异常表, size:%d\n ", exception_table_len);
+
+        parseExceptionTable(method);
+    }
+
+    // attributes count
+    short attr_count = stream()->get_u2();
+    attribute->set_attributes_count(attr_count);
+
+    // attributes
+    for (int i = 0; i < attr_count; ++i) {
+        short name_index = stream()->get_u2_fast();
+        string name = klass->constant_pool()->get_item_string(name_index);
+
+        if ("LocalVariableTable" == name) {
+            parseLocalVariableTable(method);
+        } else if ("LineNumberTable" == name) {
+            parseLineNumberTable(method);
+        } else if ("StackMaptable" == name) {
+            INFO_PRINT("\t\t 开始解析方法属性: StackMapTable\n");
+            parseStackMapTable(method);
+        } else {
+            ERROR_PRINT("未处理的方法属性:%s\n", name.c_str());
+            exit(-1);
+        }
+    }
+}
+
+void ClassFileParser::parseLocalVariableTable(MethodInfo *method) {
+    InstanceKlass *klass = static_cast<InstanceKlass *>(method->klass());
+    CodeAttribute *attribute = static_cast<CodeAttribute *>(method->attribute());
+
+    // name index
+    short name_index = stream()->get_u2();
+    string name = klass->constant_pool()->get_item_string(name_index);
+
+    INFO_PRINT("\t\t 开始解析方法属性: %s\n", name.c_str());
+
+    // length
+    int length = stream()->get_u4();
+
+    // table length
+    short table_length = stream()->get_u2();
+
+    LocalVariableTable *table = new LocalVariableTable(length);
+    attribute->set_local_variable_table(table);
+
+    table->set_name_index(name_index);
+    table->set_table_length(table_length);
+
+    // table item
+    for (int i = 0; i < table_length; ++i) {
+        // start pc
+        short start_pc = stream()->get_u2();
+        table->table()[i].start_pc = start_pc;
+
+        // length
+        short length = stream()->get_u2();
+        table->table()[i].length = length;
+
+        // name index
+        short name_index = stream()->get_u2();
+        table->table()[i].name_index = name_index;
+
+        // descriptor index
+        short descriptor_index = stream()->get_u2();
+        table->table()[i].descriptor_index = descriptor_index;
+
+        // index
+        short index = stream()->get_u2();
+        table->table()[i].index = index;
+
+        INFO_PRINT("\t\t\t start pc : %d, length: %d, name index: %d, descriptor index: %d, inedx: %d\n",
+                   start_pc, length, name_index, descriptor_index, index);
+    }
+}
+
+void ClassFileParser::parseLineNumberTable(MethodInfo* method) {
+
 }
