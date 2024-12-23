@@ -6,7 +6,7 @@
 #define XVM_CPP_SYSTEMDICTIONARY_H
 
 #include "Dictionary.h"
-#include "../oops/Klass.h"
+//#include "../oops/Klass.h"
 
 class ClassLoader;
 

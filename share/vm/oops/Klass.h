@@ -6,9 +6,17 @@
 #define XVM_CPP_KLASS_H
 #include "Metadata.h"
 
+class ClassLoaderData;
+
 
 class Klass : public Metadata{
 
+public:
+    Klass() {}
+
+    void* operator new(size_t size) {};
+
+    void* operator new(size_t size, ClassLoaderData* loader_data, size_t size);
 };
 
 

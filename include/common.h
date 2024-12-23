@@ -41,6 +41,17 @@ typedef enum {
 
 #define DEFAULT_GC_TYPE GC_MARK_CLEAN
 
+#define UseBiasedLocking false
+#define UseCompressedClassPointers false
+
+typedef class objArrayOopDesc* objArrayOop;
+
+// Analogous opaque struct for metdata allocated from metaspaces;
+class MetaWord {
+private:
+    char* i;
+};
+
 /*=================================
  *  自定义打印输出
  ==================================*/

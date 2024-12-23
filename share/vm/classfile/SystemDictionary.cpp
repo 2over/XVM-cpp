@@ -3,6 +3,8 @@
 //
 
 #include "SystemDictionary.h"
+#include "../oops/Klass.h"
+
 extern JNIEnv* g_env;
 
 Dictionary* SystemDictionary::_dictionary = NULL;
@@ -25,5 +27,13 @@ Klass* SystemDictionary::resolve_instance_class_or_null(string class_name) {
     }
 
     klass = ClassLoader::load_classfile(class_name);
+    if (NULL == klass) {
+        ERROR_PRINT("不存在的文件: %s\n", class_name.c_str());
+        exit(-1);
+    }
+
+    dictionary()->add(class_name, reinterpret_cast<long>(klass));
+    return klass;
+
 }
 
