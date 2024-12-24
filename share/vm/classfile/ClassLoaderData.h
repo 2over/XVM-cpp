@@ -56,7 +56,7 @@ public:
 
     // THe Metaspace is created lazily so may be NULL.
     // THis method will allocate a Metaspace if needed.
-    Metaspace *metaspace_non_null();
+    Metaspace* metaspace_non_null();
 };
 
 

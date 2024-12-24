@@ -16,7 +16,7 @@ public:
 
     void* operator new(size_t size) {};
 
-    void* operator new(size_t size, ClassLoaderData* loader_data, size_t size);
+    void* operator new(size_t size, ClassLoaderData* loader_data, size_t word_size);
 };
 
 

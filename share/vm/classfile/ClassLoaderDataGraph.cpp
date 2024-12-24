@@ -4,6 +4,8 @@
 
 #include "ClassLoaderDataGraph.h"
 #include "../../../include/common.h"
+#include "Java_lang_ClassLoader.h"
+#include "ClassLoaderData.h"
 
 ClassLoaderData* ClassLoaderDataGraph::_head = NULL;
 

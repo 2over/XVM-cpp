@@ -4,8 +4,10 @@
 
 #include "Universe.h"
 #include "../../../include/common.h"
+#include "genCollectedHeap.h"
+#include "MarkSweepPolicy.h"
 
-CollectedHeap* Universe::_collectedHeap = NULL;
+CollectedHeap *Universe::_collectedHeap = NULL;
 
 void Universe::initialize_heap() {
 
@@ -16,6 +18,22 @@ void Universe::initialize_heap() {
     } else if (UseG1GC) {
 
     } else {
-        GenColl
+
+        GenCollectorPolicy *gc_policy;
+        if (UseSerialGC) {
+
+        } else if (UseConcMarkSweepGC) {
+
+        } else {
+            gc_policy = new MarkSweepPolicy();
+        }
+
+        GenCollectedHeap *heap = new GenCollectedHeap(gc_policy);
+
+        Universe::_collectedHeap = heap;
+        heap->initialize();
+
     }
+
+
 }

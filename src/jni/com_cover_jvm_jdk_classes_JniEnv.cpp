@@ -5,7 +5,10 @@
 #include "../../include/common.h"
 #include "../../include/jni/Handle.h"
 #include "../../include/jni/JniTools.h"
-#include "../../share/vm/oops/"
+#include "../../share/vm/oops/InstanceKlass.h"
+#include "../../share/vm/prims/JavaNativeInterface.h"
+#include "../../share/vm/runtime/JavaThread.h"
+#include "../../share/vm/runtime/Threads.h"
 
 
 /*
@@ -15,7 +18,7 @@
  */
 JNIEXPORT jobject JNICALL Java_com_cover_jvm_jdk_classes_JniEnv_getMethodID
         (JNIEnv *env, jclass clazz, jobject klass_handle, jstring method_name, jstring descriptor_name) {
-    Inst
+
 }
 
 /*

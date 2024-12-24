@@ -6,6 +6,7 @@
 #include "../../../include/memory/memory_pool.h"
 #include "Metachunk.h"
 #include "BlockFreelist.h"
+#include "../classfile/ClassLoaderData.h"
 
 extern MemoryPool g_mempool;
 
@@ -116,5 +117,31 @@ MetaWord *SpaceManager::grow_and_allocate(size_t word_size) {
 MetaWord *Metaspace::allocate(ClassLoaderData *loader_data, size_t word_size, bool read_only, MetaspaceObj::Type type) {
     MetadataType mdtype = (type == MetaspaceObj::ClassType) ? ClassType : NonClassType;
 
-    MetaWord *result = loader_data->metaspace
+    MetaWord *result = loader_data->metaspace_non_null()->allocate(word_size, mdtype);
+    if (NULL == result) {
+        // 触发GC
+        ERROR_PRINT("Metaspace空间不足\n");
+        exit(-1);
+    }
+
+    return result;
+}
+
+MetaWord *Metaspace::allocate(size_t word_size, MetadataType mdtype) {
+    if (UseCompressedClassPointers) {
+        return class_vsm()->allocate(word_size);
+    } else {
+        return vsm()->allocate(word_size);
+    }
+}
+
+Metaspace::Metaspace(Metaspace::MetaspaceType type) {
+    initialize(type);
+}
+
+void Metaspace::initialize(Metaspace::MetaspaceType type) {
+    _vsm = new SpaceManager(NonClassType);
+    if (_vsm == NULL) {
+        return ;
+    }
 }
