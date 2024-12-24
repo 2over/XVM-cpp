@@ -7,7 +7,7 @@
 #include "ClassLoaderData.h"
 
 
- ClassLoaderData *Java_lang_ClassLoader::loader_data(ClassLoader *loader) {
+ClassLoaderData *Java_lang_ClassLoader::loader_data(ClassLoader *loader) {
     return loader->loader_data();
 }
 

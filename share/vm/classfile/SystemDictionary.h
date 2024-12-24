@@ -6,7 +6,7 @@
 #define XVM_CPP_SYSTEMDICTIONARY_H
 
 #include "Dictionary.h"
-//#include "../oops/Klass.h"
+#include "../oops/Klass.h"
 
 class ClassLoader;
 
@@ -29,7 +29,7 @@ public:
 
     static void load_super_class(Klass *klass);
 
-    static Klass *resolve_from_stream(ClassLoader *class_loader);
+    static Klass* resolve_from_stream(ClassLoader *class_loader);
 
     static ClassLoaderData *register_loader(ClassLoader *class_loader);
 

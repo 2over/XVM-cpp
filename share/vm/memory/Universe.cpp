@@ -25,7 +25,7 @@ void Universe::initialize_heap() {
         } else if (UseConcMarkSweepGC) {
 
         } else {
-            gc_policy = new MarkSweepPolicy();
+             gc_policy = new MarkSweepPolicy();
         }
 
         GenCollectedHeap *heap = new GenCollectedHeap(gc_policy);

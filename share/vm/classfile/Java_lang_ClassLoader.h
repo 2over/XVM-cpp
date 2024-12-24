@@ -13,7 +13,7 @@ class Java_lang_ClassLoader {
 public:
     static ClassLoaderData **loader_data_addr(ClassLoader *loader);
 
-    static ClassLoader *loader_data(ClassLoader *loader);
+    static ClassLoaderData *loader_data(ClassLoader *loader);
 };
 
 
