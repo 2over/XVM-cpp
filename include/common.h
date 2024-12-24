@@ -18,6 +18,31 @@ typedef unsigned short      ushort;
 typedef unsigned int        uint;
 typedef unsigned long       ulong;
 
+const size_t K              = 1024;
+const size_t M              = K * K;
+const size_t G              = M * K;
+
+// Used in declarations in SpaceManager and ChunkManager
+enum ChunkIndex {
+    ZeroIndex = 0,
+    SpecializedIndex = ZeroIndex,
+    SmallIndex = SpecializedIndex + 1,
+    MediumIndex = SmallIndex + 1,
+    HumongousIndex = MediumIndex + 1,
+    NumberOfFreeLists = 3,
+    NumberOfInUseLists = 4
+};
+
+enum ChunkSizes { // in words
+    ClassSpecializedChunk = 128,
+    SpecializedChunk = 128,
+    ClassSmallChunk = 256,
+    SmallChunk = 512,
+    ClassMediumChunk = 4 * K,
+    MediumChunk = 8 * K
+
+};
+
 typedef union {
     long        l_dummy;
     double      d_dummy;
