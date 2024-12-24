@@ -39,8 +39,24 @@ private:
 public:
     ClassLoaderData(ClassLoader *class_loader, bool is_anonymous, Dependencies dependencies) :
             _class_loader(class_loader), _metaspace(NULL), _is_anonymous(is_anonymous), _dependencies(dependencies) {
-
     }
+
+public:
+    static ClassLoaderData *the_null_class_loader_data() {
+        return _the_null_class_loader_data;
+    }
+
+    void set_metaspace(Metaspace *m) {
+        _metaspace = m;
+    }
+
+    bool is_anonymous() const {
+        return _is_anonymous;
+    }
+
+    // THe Metaspace is created lazily so may be NULL.
+    // THis method will allocate a Metaspace if needed.
+    Metaspace *metaspace_non_null();
 };
 
 

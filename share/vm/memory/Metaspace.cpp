@@ -116,5 +116,5 @@ MetaWord *SpaceManager::grow_and_allocate(size_t word_size) {
 MetaWord *Metaspace::allocate(ClassLoaderData *loader_data, size_t word_size, bool read_only, MetaspaceObj::Type type) {
     MetadataType mdtype = (type == MetaspaceObj::ClassType) ? ClassType : NonClassType;
 
-    MetaWord *result = loader_data->metaspac_n
+    MetaWord *result = loader_data->metaspace
 }
