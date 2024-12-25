@@ -6,6 +6,8 @@
 #define XVM_CPP_VM_GC_OPERATION_H
 
 
+#include "../../runtime/VM_Operation.h"
+
 class VM_GC_Operation : public VM_Operation{
 
 };

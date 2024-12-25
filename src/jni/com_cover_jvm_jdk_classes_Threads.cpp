@@ -2,6 +2,7 @@
 // Created by xiehao on 2024/12/12.
 //
 #include "../../include/jni/com_cover_jvm_jdk_classes_Threads.h"
+#include "../../share/vm/gc_implementation/shared/VM_GenCollectForAllocation.h"
 
 JavaVM* g_jvm = NULL;
 JNIEnv* g_env = NULL;
@@ -31,6 +32,7 @@ JNIEXPORT void JNICALL Java_com_cover_jvm_jdk_classes_Threads_gc
         (JNIEnv *env, jclass clazz) {
 
     VM_GenCollectForAllocation op(16);
+    VMThread::execute(&op);
 
 }
 
