@@ -18,7 +18,7 @@ private:
 public:
     ClassFileStream *open_stream(string class_name);
 
-    ClassFileStream *open_file_stream(string path, string clas_name);
+    ClassFileStream *open_file_stream(string path, string class_name);
 
     string &replace_all(string &str, const string &old_value, const string &new_value) {
         while (true) {
