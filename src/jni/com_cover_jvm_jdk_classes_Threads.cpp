@@ -3,6 +3,8 @@
 //
 #include "../../include/jni/com_cover_jvm_jdk_classes_Threads.h"
 
+JavaVM* g_jvm = NULL;
+JNIEnv* g_env = NULL;
 
 
 /*
