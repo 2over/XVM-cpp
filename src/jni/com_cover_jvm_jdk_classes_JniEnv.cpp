@@ -19,6 +19,22 @@
 JNIEXPORT jobject JNICALL Java_com_cover_jvm_jdk_classes_JniEnv_getMethodID
         (JNIEnv *env, jclass clazz, jobject klass_handle, jstring method_name, jstring descriptor_name) {
 
+    InstanceKlass *klass = static_cast<InstanceKlass *>(Handle::klass(env, klass_handle));
+
+    vector<MethodInfo *> methods = klass->methods();
+    string *name_str = JniTools::jstringToString(env, method_name, true);
+    string *descriptor_str = JniTools::jstringToString(env, descriptor_name, true);
+
+    MethodInfo *ret = NULL;
+
+    for (int i = 0; i < methods.size(); i++) {
+        MethodInfo *method = methods[i];
+        if ((*name_str == method->name()) && (*descriptor_str == method->descriptor())) {
+            ret = method;
+        }
+    }
+
+    return Handle::methodToHandle(env, ret);
 }
 
 /*
@@ -27,4 +43,13 @@ JNIEXPORT jobject JNICALL Java_com_cover_jvm_jdk_classes_JniEnv_getMethodID
  * Signature: (Lcom/cover/jvm/jdk/classes/Handle;Lcom/cover/jvm/jdk/classes/Handle;)V
  */
 JNIEXPORT void JNICALL Java_com_cover_jvm_jdk_classes_JniEnv_CallStaticVoidMethod
-        (JNIEnv *, jclass, jobject, jobject);
+        (JNIEnv *env, jclass clazz, jobject klass_handle, jobject method_handle) {
+
+    InstanceKlass *klass = static_cast<InstanceKlass *>(Handle::klass(env, klass_handle));
+    MethodInfo *method = Handle::method(env, method_handle);
+
+    JavaThread *thread = new JavaThread(nullptr);
+    Threads::set_current_thread(thread);
+
+    JavaNativeInterface::callStaticVoidMethod(klass, method);
+}
