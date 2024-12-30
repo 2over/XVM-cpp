@@ -6,6 +6,7 @@
 #include "../../share/vm/runtime/VMThread.h"
 #include "../../share/vm/memory/Universe.h"
 #include "../../share/vm/memory/genCollectedHeap.h"
+#include "../../share/vm/classfile/SystemDictionary.h"
 
 JavaVM* g_jvm = NULL;
 JNIEnv* g_env = NULL;
@@ -22,8 +23,14 @@ void init_globals();
  */
 JNIEXPORT void JNICALL Java_com_cover_jvm_jdk_classes_Threads_createVM
         (JNIEnv *env, jclass clazz) {
+    INFO_PRINT("Hello \n");
     g_env = env;
     env->GetJavaVM(&g_jvm);
+    INFO_PRINT("GetJavaVM Finish\n");
+    init_globals();
+
+    SystemDictionary::initialize();
+//    Hashmap::initialize();
 }
 
 /*
